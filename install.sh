@@ -16,8 +16,8 @@ DEFAULT_DISK="/dev/$DEFAULT_DISK"
 read -p "Target Disk [$DEFAULT_DISK]: " DISK
 DISK=${DISK:-$DEFAULT_DISK}
 
-read -p "Hostname [arch-golden]: " HOSTNAME
-HOSTNAME=${HOSTNAME:-arch-golden}
+read -p "Hostname [arch]: " HOSTNAME
+HOSTNAME=${HOSTNAME:-arch}
 
 read -p "Username [daw]: " USERNAME
 USERNAME=${USERNAME:-daw}
@@ -31,6 +31,9 @@ echo
 
 read -p "Timezone [Europe/Zurich]: " TIMEZONE
 TIMEZONE=${TIMEZONE:-Europe/Zurich}
+
+read -p "Locale [en_US.UTF-8]: " LOCALE
+LOCALE=${LOCALE:-en_US.UTF-8}
 
 read -p "Keymap [de_CH-latin1]: " KEYMAP
 KEYMAP=${KEYMAP:-de_CH-latin1}
@@ -106,7 +109,7 @@ pacstrap -K /mnt base base-devel linux linux-firmware linux-headers \
     intel-ucode \
     man-db man-pages texinfo bluez bluez-utils \
     pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils \
-    zram-generator timeshift ly
+    zram-generator timeshift ly inotify-tools
 
 # --- 7. CONFIGURATION (Fstab & Chroot) ---
 echo ">> [6/8] Generating Fstab..."
@@ -167,12 +170,16 @@ grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable sshd
-systemctl enable ly
 systemctl enable firewalld
 systemctl enable reflector.timer
 systemctl enable fstrim.timer
 systemctl enable acpid
 systemctl enable grub-btrfsd
+systemctl enable cronie
+
+ln -sf /usr/lib/systemd/system/ly@.service /etc/systemd/system/display-manager.service
+ln -sf /usr/lib/systemd/system/ly@.service /etc/systemd/system/multi-user.target.wants/ly@tty2.service
+systemctl mask getty@tty2.service
 
 EOF
 
