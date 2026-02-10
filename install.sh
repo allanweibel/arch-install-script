@@ -44,6 +44,12 @@ echo "!!! WARNING: ALL DATA ON $DISK WILL BE DESTROYED !!!"
 echo "Press Ctrl+C to cancel. Starting in 5 seconds..."
 sleep 5
 
+# --- 1.5. PRE-FLIGHT CHECKS ---
+echo ">> [0/8] synchronizing clock..."
+timedatectl set-ntp true
+# Wait a moment for sync (optional but safe)
+sleep 2
+
 # --- 2. PARTITIONING ---
 echo ">> [1/8] Partitioning $DISK..."
 sgdisk -Z $DISK # Zap all data
