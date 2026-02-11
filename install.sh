@@ -86,16 +86,14 @@ mkfs.btrfs -f /dev/mapper/main
 mount /dev/mapper/main /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@snapshots
 btrfs subvolume create /mnt/@var_log
 umount /mnt
 
 # --- 5. MOUNTING ---
 echo ">> [4/8] Mounting..."
 mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@ /dev/mapper/main /mnt
-mkdir -p /mnt/{home,boot,var/log,.snapshots}
+mkdir -p /mnt/{home,boot,var/log}
 mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@home /dev/mapper/main /mnt/home
-mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@snapshots /dev/mapper/main /mnt/.snapshots
 mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@var_log /dev/mapper/main /mnt/var/log
 mount $PART1 /mnt/boot
 
