@@ -10,9 +10,14 @@ Download the script
 curl -O https://raw.githubusercontent.com/allanweibel/arch-install-script/main/install.sh
 ```
 
-Run it
+Set permission
 
 ```
 chmod +x install.sh
+```
+
+Run it
+
+```
 ./install.sh
 ```
