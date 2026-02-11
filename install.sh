@@ -97,6 +97,15 @@ mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@home /dev/ma
 mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@var_log /dev/mapper/main /mnt/var/log
 mount $PART1 /mnt/boot
 
+# --- 5.5. OPTIMIZE MIRRORS (HOST) ---
+echo ">> [4.5/8] Optimizing Mirrors for Installation..."
+# 1. Update the Live ISO's pacman config to allow 5 parallel downloads
+sed -i 's/^#ParallelDownloads/ParallelDownloads = 5/' /etc/pacman.conf
+# 2. Find the fastest HTTPS mirrors in your region right now
+reflector --country Switzerland,Germany,France --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+# 3. Force the Live ISO to see these new mirrors
+pacman -Sy
+
 # --- 6. PACSTRAP (Base Install) ---
 echo ">> [5/8] Installing Base Packages..."
 pacstrap -K /mnt base base-devel linux linux-firmware linux-headers \
@@ -107,7 +116,7 @@ pacstrap -K /mnt base base-devel linux linux-firmware linux-headers \
     intel-ucode \
     man-db man-pages texinfo bluez bluez-utils \
     pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils \
-    zram-generator timeshift ly inotify-tools
+    zram-generator timeshift ly inotify-tools pacman-contrib
 
 # --- 7. CONFIGURATION (Fstab & Chroot) ---
 echo ">> [6/8] Generating Fstab..."
@@ -134,6 +143,21 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 useradd -m -G wheel -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+
+# --- OPTIMIZATION: PARALLEL DOWNLOADS (TARGET) ---
+# This ensures the *installed* system also uses parallel downloads in the future
+sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+
+# --- OPTIMIZATION: REFLECTOR CONFIG (TARGET) ---
+# This sets up the weekly background job to keep mirrors fresh
+mkdir -p /etc/xdg/reflector
+cat <<REFLECTOR > /etc/xdg/reflector/reflector.conf
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--country Switzerland,Germany,France
+--sort rate
+--latest 10
+REFLECTOR
 
 # --- ZRAM CONFIGURATION ---
 # Create the config file directly
@@ -174,6 +198,7 @@ systemctl enable fstrim.timer
 systemctl enable acpid
 systemctl enable grub-btrfsd
 systemctl enable cronie
+systemctl enable paccache.timer
 
 ln -sf /usr/lib/systemd/system/ly@.service /etc/systemd/system/display-manager.service
 ln -sf /usr/lib/systemd/system/ly@.service /etc/systemd/system/multi-user.target.wants/ly@tty2.service
