@@ -125,7 +125,6 @@ echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 echo "root:$ROOT_PASSWORD" | chpasswd
 useradd -m -G wheel -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # --- OPTIMIZATION: PARALLEL DOWNLOADS (TARGET) ---
 # This ensures the *installed* system also uses parallel downloads in the future
@@ -156,7 +155,7 @@ REFLECTOR
 # --- INSTALLING THE REST OF THE SYSTEM ---
 echo ">> Installing Kernel, Drivers, and Core Packages..."
 # Now that mirrors are optimized and parallel downloads are on, we install everything else:
-pacman -Syu --noconfirm base-devel linux linux-firmware linux-headers \
+yes | pacman -Syu --noconfirm base-devel linux linux-firmware linux-headers \
     btrfs-progs grub efibootmgr grub-btrfs \
     networkmanager network-manager-applet \
     openssh sudo neovim git mtools \
@@ -165,6 +164,9 @@ pacman -Syu --noconfirm base-devel linux linux-firmware linux-headers \
     man-db man-pages texinfo bluez bluez-utils \
     pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils \
     zram-generator timeshift ly inotify-tools pacman-contrib
+
+# --- CONFIGURE SUDO ---
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # --- ZRAM CONFIGURATION ---
 # Create the config file directly
