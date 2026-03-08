@@ -97,9 +97,26 @@ mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@home /dev/ma
 mount -o noatime,compress=zstd,space_cache=v2,discard=async,subvol=@var_log /dev/mapper/main /mnt/var/log
 mount $PART1 /mnt/boot
 
+# --- 5.5. OPTIMIZE MIRRORS (HOST) ---
+echo ">> [4.5/8] Optimizing Mirrors for Installation..."
+# 1. Update the Live ISO's pacman config to allow 5 parallel downloads
+sed -i 's/^#ParallelDownloads/ParallelDownloads = 5/' /etc/pacman.conf
+# 2. Find the fastest HTTPS mirrors in your region right now
+reflector --country Switzerland,Germany,France --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+# 3. Force the Live ISO to see these new mirrors
+pacman -Sy
+
 # --- 6. PACSTRAP (Base Install) ---
 echo ">> [5/8] Installing Base Packages..."
-pacstrap -K /mnt base
+pacstrap -K /mnt base base-devel linux linux-firmware linux-headers \
+    btrfs-progs grub efibootmgr grub-btrfs \
+    networkmanager network-manager-applet \
+    openssh sudo neovim git mtools \
+    iptables-nft ipset firewalld reflector acpid \
+    intel-ucode \
+    man-db man-pages texinfo bluez bluez-utils \
+    pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils \
+    zram-generator timeshift ly inotify-tools pacman-contrib
 
 # --- 7. CONFIGURATION (Fstab & Chroot) ---
 echo ">> [6/8] Generating Fstab..."
@@ -125,21 +142,11 @@ echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
 echo "root:$ROOT_PASSWORD" | chpasswd
 useradd -m -G wheel -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # --- OPTIMIZATION: PARALLEL DOWNLOADS (TARGET) ---
 # This ensures the *installed* system also uses parallel downloads in the future
 sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
-
-# --- PREPARE FOR FAST INSTALLATION ---
-echo ">> Setting up Reflector..."
-# 1. Install reflector using the default ISO mirrors (it is very small)
-pacman -Sy --noconfirm reflector rsync
-
-# 2. Optimize mirrors right now for the massive download ahead
-reflector --country Switzerland,Germany,France --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-
-# 3. Force to see these new mirrors
-pacman -Sy
 
 # --- OPTIMIZATION: REFLECTOR CONFIG (TARGET) ---
 # This sets up the weekly background job to keep mirrors fresh
@@ -151,22 +158,6 @@ cat <<REFLECTOR > /etc/xdg/reflector/reflector.conf
 --sort rate
 --latest 10
 REFLECTOR
-
-# --- INSTALLING THE REST OF THE SYSTEM ---
-echo ">> Installing Kernel, Drivers, and Core Packages..."
-# Now that mirrors are optimized and parallel downloads are on, we install everything else:
-yes | pacman -Syu --noconfirm base-devel linux linux-firmware linux-headers \
-    btrfs-progs grub efibootmgr grub-btrfs \
-    networkmanager network-manager-applet \
-    openssh sudo neovim git mtools \
-    iptables-nft ipset firewalld acpid cronie \
-    intel-ucode \
-    man-db man-pages texinfo bluez bluez-utils \
-    pipewire pipewire-pulse pipewire-jack wireplumber alsa-utils \
-    zram-generator timeshift ly inotify-tools pacman-contrib
-
-# --- CONFIGURE SUDO ---
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 # --- ZRAM CONFIGURATION ---
 # Create the config file directly
