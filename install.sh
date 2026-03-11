@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "=== Arch Linux Custom Provisioning ==="
 
@@ -39,8 +40,8 @@ cat <<EOF > user_credentials.json
     {
       "!password": "$PASSWORD",
       "groups": [],
-      "sudo": true
-      "username": "$USERNAME",
+      "sudo": true,
+      "username": "$USERNAME"
     }
   ]
 }
