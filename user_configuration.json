@@ -137,17 +137,6 @@
         "custom_repositories": [],
         "custom_servers": [],
         "mirror_regions": {
-            "Austria": [
-                "http://mirror.easyname.at/archlinux/$repo/os/$arch",
-                "http://mirror.digitalnova.at/archlinux/$repo/os/$arch",
-                "http://at.mirrors.cicku.me/archlinux/$repo/os/$arch",
-                "https://at.mirrors.cicku.me/archlinux/$repo/os/$arch",
-                "https://at.arch.mirror.kescher.at/$repo/os/$arch",
-                "http://mirror.alwyzon.net/archlinux/$repo/os/$arch",
-                "https://mirror.alwyzon.net/archlinux/$repo/os/$arch",
-                "https://at.arch.niranjan.co/$repo/os/$arch",
-                "https://at-vie.soulharsh007.dev/archlinux/$repo/os/$arch"
-            ],
             "France": [
                 "http://mir.archlinux.fr/$repo/os/$arch",
                 "http://archlinux.mirrors.ovh.net/archlinux/$repo/os/$arch",
