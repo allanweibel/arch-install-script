@@ -7,7 +7,13 @@ ping -c 2 archlinux.org
 Download the script
 
 ```
-curl -O https://raw.githubusercontent.com/allanweibel/arch-install-script/main/install.sh
+git clone https://github.com/allanweibel/arch-install-script.git
+```
+
+Navigate to directory
+
+```
+cd arch-install-script
 ```
 
 Set permission
