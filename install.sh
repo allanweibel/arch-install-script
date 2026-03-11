@@ -34,13 +34,13 @@ sed -i "s|@TARGET_HOSTNAME@|$HOSTNAME|g" user_configuration.json
 cat <<EOF > user_credentials.json
 {
   "encryption_password": "$LUKS_PASSWORD",
-  "root_password": "$ROOT_PASSWORD",
+  "!root_password": "$ROOT_PASSWORD",
   "users": [
     {
-      "username": "$USERNAME",
-      "password": "$PASSWORD",
+      "!password": "$PASSWORD",
       "groups": [],
       "sudo": true
+      "username": "$USERNAME",
     }
   ]
 }
@@ -48,6 +48,6 @@ EOF
 
 # 4. Execute the silent, zero-touch installation
 echo "Starting Archinstall... Grab a coffee."
-archinstall --config user_configuration.json --creds user_credentials.json
+archinstall --config user_configuration.json --creds user_credentials.json --silent
 
 echo "Installation complete! You can now reboot."
