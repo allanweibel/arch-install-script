@@ -21,7 +21,9 @@
       "sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf",
       "mkdir -p /etc/xdg/reflector",
       "echo -e '--save /etc/pacman.d/mirrorlist\\n--protocol https\\n--country Switzerland,Germany,France\\n--sort rate\\n--latest 10' > /etc/xdg/reflector/reflector.conf",
-      "echo -e '[zram0]\\nzram-size = ram / 2\\ncompression-algorithm = zstd\\nswap-priority = 100\\nfs-type = swap' > /etc/systemd/zram-generator.conf"
+      "echo -e '[zram0]\\nzram-size = ram / 2\\ncompression-algorithm = zstd\\nswap-priority = 100\\nfs-type = swap' > /etc/systemd/zram-generator.conf",
+      "echo 'GRUB_TOP_LEVEL=\"/boot/vmlinuz-linux\"' >> /etc/default/grub",
+      "grub-mkconfig -o /boot/grub/grub.cfg"
     ],
     "disk_config": {
         "btrfs_options": {
