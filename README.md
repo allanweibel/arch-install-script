@@ -7,7 +7,7 @@ ping -c 2 archlinux.org
 Check if git is already installed
 
 ```
-sudo pacman -Sy git
+pacman -Sy git
 ```
 
 Download the script
@@ -22,14 +22,8 @@ Navigate to directory
 cd arch-install-script
 ```
 
-Set permission
-
-```
-chmod +x install.sh
-```
-
 Run it
 
 ```
-./install.sh
+bash install.sh
 ```
