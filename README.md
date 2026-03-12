@@ -1,11 +1,19 @@
-Verify internet first
+# Custom Arch Install Read Me
 
-```
+Check internet connection
+
+```bash
 ping -c 2 archlinux.org
 ```
 
-Run it
+Install git
 
+```bash
+yes | pacman -Sy git
 ```
-yes | pacman -Sy git && git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && bash install.sh
+
+Download and run the script
+
+```bash
+git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && bash arch-install-script/install.sh
 ```
