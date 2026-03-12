@@ -12,7 +12,7 @@ Install git
 yes | pacman -Sy git
 ```
 
-Download and run the script
+Clone and run the script
 
 ```bash
 git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && bash arch-install-script/install.sh
