@@ -1,29 +1,16 @@
-Verify internet first
+# Arch Linux Zero-Touch Provisioning
 
-```
+**1. Verify internet connection:**
+\`\`\`bash
 ping -c 2 archlinux.org
-```
+\`\`\`
 
-Check if git is already installed
+**2. Install Git (Silently):**
+\`\`\`bash
+pacman -Sy git --noconfirm
+\`\`\`
 
-```
-pacman -Sy git
-```
-
-Download the script
-
-```
-git clone https://github.com/allanweibel/arch-install-script.git
-```
-
-Navigate to directory
-
-```
-cd arch-install-script
-```
-
-Run it
-
-```
-bash install.sh
-```
+**3. Download and Run:**
+\`\`\`bash
+git clone <https://github.com/allanweibel/arch-install-script.git> && cd arch-install-script && bash install.sh
+\`\`\`
