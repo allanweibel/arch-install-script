@@ -15,5 +15,5 @@ yes | pacman -Sy git
 Clone and run the script
 
 ```bash
-git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && bash install.sh
+git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && clear && bash install.sh
 ```
