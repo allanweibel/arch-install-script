@@ -4,6 +4,12 @@ Verify internet first
 ping -c 2 archlinux.org
 ```
 
+Check if git is already installed
+
+```
+sudo pacman -Sy git
+```
+
 Download the script
 
 ```

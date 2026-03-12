@@ -96,8 +96,8 @@
                                 "unit": "B",
                                 "value": 512
                             },
-                            "unit": "B",
-                            "value": 20398997504
+                            "unit": "%",
+                            "value": 100
                         },
                         "start": {
                             "sector_size": {
@@ -322,7 +322,9 @@
         "nano",
         "openssh",
         "inotify-tools",
-        "reflector"
+        "reflector",
+        "pacman-contrib",
+        "firewalld"
     ],
     "parallel_downloads": 5,
     "profile_config": {
@@ -339,7 +341,10 @@
       "NetworkManager",
       "sshd",
       "grub-btrfsd",
-      "reflector.timer"
+      "firewalld",
+      "reflector.timer",
+      "fstrim.timer",
+      "paccache.timer"
     ],
     "swap": {
         "algorithm": "zstd",
