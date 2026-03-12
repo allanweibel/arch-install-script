@@ -31,6 +31,13 @@ echo "Configuring templates..."
 sed -i "s|@TARGET_DISK@|$DISK|g" user_configuration.json
 sed -i "s|@TARGET_HOSTNAME@|$HOSTNAME|g" user_configuration.json
 
+# Calculate exact bytes for BTRFS partition (Total Disk Size - 1 MiB Start Buffer - 1024 MiB Boot Partition - 1 MiB End Buffer)
+TOTAL_BYTES=$(blockdev --getsize64 "$DISK")
+BTRFS_SIZE=$((TOTAL_BYTES - 1075838976))
+
+# Replace the placeholder AND remove the quotes so it becomes a valid integer in JSON
+sed -i "s|\"@BTRFS_SIZE@\"|$BTRFS_SIZE|g" user_configuration.json
+
 # 3. Generate the exact credentials file archinstall expects
 cat <<EOF > user_credentials.json
 {
