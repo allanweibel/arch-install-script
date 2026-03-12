@@ -324,7 +324,9 @@
         "inotify-tools",
         "reflector",
         "pacman-contrib",
-        "firewalld"
+        "firewalld",
+        "man-db",
+        "man-pages"
     ],
     "parallel_downloads": 5,
     "profile_config": {
