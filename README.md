@@ -1,19 +1,16 @@
-# Custom Arch Install Read Me
+# Arch Linux Zero-Touch Provisioning
 
-Check internet connection
-
+**1. Verify internet connection:**
 ```bash
 ping -c 2 archlinux.org
 ```
 
-Install git
-
+**2. Install Git:**
 ```bash
-yes | pacman -Sy git
+pacman -Sy git --noconfirm
 ```
 
-Clone and run the script
-
+**3. Download and Run:**
 ```bash
-git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && clear && bash install.sh
+git clone https://github.com/allanweibel/arch-install-script.git && cd arch-install-script && bash install.sh
 ```
